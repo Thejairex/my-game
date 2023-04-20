@@ -22,8 +22,7 @@ class Enemigo(ObjetoJuego):
     def __init__(self) -> None:
         super().__init__(15, 15)
         self.name = "Monster"
-        self.width = 15
-        self.height = 15
+        self.speed = 2
         self.rect.x = random.randint(15, 685-self.width)
         self.rect.y = random.randint(15, 485-self.width)
 
@@ -76,7 +75,8 @@ class Juego:
 
         # Events
         self.inGame = False
-        self.enemyKilled = 0
+        self.totalEnemiesKilled = 0
+        self.enemiesKilled = 0
 
         # Settings
         self.mainFont = pygame.font.SysFont("Dancing Script", 24)
@@ -119,7 +119,24 @@ class Juego:
                 to_remove.append(enemy)
         
         self.listEnemies = [enemy for enemy in self.listEnemies if enemy not in to_remove]
-        self.enemyKilled += self.maxEnemies - len(self.listEnemies)
+        self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
+        self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
+        
+    def followPlayer(self):
+        for enemy in self.listEnemies:
+            if enemy.rect.x < self.player.rect.centerx:
+                enemy.rect.x += enemy.speed
+            if enemy.rect.x > self.player.rect.centerx:
+                enemy.rect.x -= enemy.speed
+            if enemy.rect.y < self.player.rect.centery:
+                enemy.rect.y += enemy.speed
+            if enemy.rect.y > self.player.rect.centery:
+                enemy.rect.y -= enemy.speed 
+                
+    def upMaxEnemies(self):
+        if self.enemiesKilled % 50 == 0 and self.enemiesKilled != 0:
+            self.maxEnemies += 1
+            self.enemiesKilled = 0  
         
     def time_conversion(self):
         if self.secondsTemp >= 60:
@@ -169,9 +186,11 @@ class Juego:
 
             # Logica del juego.
             self.colliders()
+            self.followPlayer()
+            self.upMaxEnemies()
 
             labelTime = self.mainFont.render(timeConv, 0, self.white)
-            labelEnemyKilled = self.mainFont.render(f"Enemigos eliminados: {self.enemyKilled}", 0, self.white)
+            labelEnemyKilled = self.mainFont.render(f"Enemigos eliminados: {self.totalEnemiesKilled}", 0, self.white)
             self.screen.blit(labelTime,
                              (self.size[0]//2 - labelTime.get_width()//2, 0))
             self.screen.blit(labelEnemyKilled,
