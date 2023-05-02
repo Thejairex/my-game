@@ -27,9 +27,12 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Files no Important
+# Files not Important
 pruebas.py
 client.py
+*.ase
+# Folder Not Important
+codigoNoUtilizado/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
