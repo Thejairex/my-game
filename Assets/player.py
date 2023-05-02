@@ -17,7 +17,7 @@ class Personaje(Entity):
         self.rect.y = size[1] // 2 - self.rect.height // 2
 
         # Config
-        self.speed = 5
+        self.speed = 4
         self.moveState = False
         self.moveDirection = "right"
 

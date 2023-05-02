@@ -7,4 +7,4 @@ class Enemigo(Entity):
 
         # Config
         self.name = name
-        self.speed = 2
+        self.speed = 1

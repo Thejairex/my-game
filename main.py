@@ -6,7 +6,7 @@ import pygame
 # Importacion de modulos
 from Assets.player import Personaje
 from Assets.Monsters.slime import Slime
-
+from Assets.spyhole import Spyhole
 
 class Juego:
     def __init__(self):
@@ -40,16 +40,23 @@ class Juego:
         # Settings
         self.mainFont = pygame.font.SysFont("Dancing Script", 24)
         self.maxEnemies = 3
+        self.spyhole = Spyhole()
+        pygame.mouse.set_visible(False)
 
         # Entities
         self.player = Personaje(self.size)
-        # self.weapon = Arma()
         self.listEnemies = []
 
     # Generations
     def generateEntities(self):
+        # Player
         self.player.draw(self.screen)
+        
+        # Mouse Spyhole
+        self.spyhole.pos(pygame.mouse.get_pos())
+        self.spyhole.draw(self.screen)
 
+        # Enemies
         while len(self.listEnemies) < self.maxEnemies:
             self.listEnemies.append(Slime())
 
@@ -113,25 +120,25 @@ class Juego:
 
             # Movimiento del Jugador
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_a]:
                 self.player.rect.left -= self.player.speed
                 self.player.moveState = True
                 self.player.flipAnimation('left')
 
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d]:
                 self.player.rect.right += self.player.speed
                 self.player.moveState = True
                 self.player.flipAnimation('right')
 
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_w]:
                 self.player.rect.top -= self.player.speed
                 self.player.moveState = True
 
-            if keys[pygame.K_DOWN]:
+            if keys[pygame.K_s]:
                 self.player.rect.bottom += self.player.speed
                 self.player.moveState = True
 
-            if not (keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]):
+            if not (keys[pygame.K_a] or keys[pygame.K_d] or keys[pygame.K_w] or keys[pygame.K_s]):
                 self.player.moveState = False
             # Control de juego
             if keys[pygame.K_q]:
