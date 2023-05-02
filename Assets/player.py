@@ -5,19 +5,16 @@ from Assets.entity import Entity
 
 
 class Personaje(Entity):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, size=tuple) -> None:
+        super().__init__(width=50, height=50)
 
         # Loading Sprites Player
-        spriteTemp = pygame.transform.scale(
-            pygame.image.load("Sprites/Player/Player.png"), (80, 80))
         spriteIdle = pygame.image.load("Sprites/Player/PlayerIdle.png")
         spriteMovements = pygame.image.load("Sprites/Player/PlayerMovents.png")
 
         # Rect
-        self.rect = spriteTemp.get_rect()
-        self.rect.x = 100
-        self.rect.y = 100
+        self.rect.x = size[0] // 2 - self.rect.width // 2
+        self.rect.y = size[1] // 2 - self.rect.height // 2
 
         # Config
         self.speed = 5

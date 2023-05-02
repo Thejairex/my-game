@@ -7,6 +7,7 @@ import pygame
 from Assets.player import Personaje
 from Assets.Monsters.slime import Slime
 
+
 class Juego:
     def __init__(self):
         pygame.init()
@@ -41,7 +42,7 @@ class Juego:
         self.maxEnemies = 3
 
         # Entities
-        self.player = Personaje()
+        self.player = Personaje(self.size)
         # self.weapon = Arma()
         self.listEnemies = []
 
@@ -67,7 +68,7 @@ class Juego:
 
         self.listEnemies = [
             enemy for enemy in self.listEnemies if enemy not in to_remove]
-        
+
         # Score Control
         self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
         self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
@@ -116,16 +117,16 @@ class Juego:
                 self.player.rect.left -= self.player.speed
                 self.player.moveState = True
                 self.player.flipAnimation('left')
-                
+
             if keys[pygame.K_RIGHT]:
                 self.player.rect.right += self.player.speed
                 self.player.moveState = True
                 self.player.flipAnimation('right')
-                
+
             if keys[pygame.K_UP]:
                 self.player.rect.top -= self.player.speed
                 self.player.moveState = True
-                
+
             if keys[pygame.K_DOWN]:
                 self.player.rect.bottom += self.player.speed
                 self.player.moveState = True
