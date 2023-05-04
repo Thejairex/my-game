@@ -17,6 +17,7 @@ class Personaje(Entity):
 
         # Config
         self.speed = 4
+        self.alive = True
         self.moveState = False
         self.moveDirection = "right"
 

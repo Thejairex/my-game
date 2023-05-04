@@ -6,6 +6,8 @@ import pygame
 from Assets.Entities.player import Personaje
 from Assets.Entities.Monsters.slime import Slime
 from Assets.spyhole import Spyhole
+from Assets.Entities.Objets.arrow import Arrow
+
 
 class Juego:
     def __init__(self):
@@ -45,12 +47,13 @@ class Juego:
         # Entities
         self.player = Personaje(self.size)
         self.listEnemies = []
+        self.listArrows = []
 
     # Generations
     def generateEntities(self):
         # Player
         self.player.draw(self.screen)
-        
+
         # Mouse Spyhole
         self.spyhole.pos(pygame.mouse.get_pos())
         self.spyhole.draw(self.screen)
@@ -61,40 +64,46 @@ class Juego:
 
         for enemy in self.listEnemies:
             enemy.draw(self.screen)
-        #     enemy.notCollision([enemyTemp for enemyTemp in self.listEnemies if enemyTemp != enemy])
+
+        # Arrows
+        for arrow in self.listArrows:
+            arrow.draw(self.screen)
+            arrow.moveToObjetive()
 
     # Metodos logicos del juego
     def colliders(self):
-
-        # Elimited Enemies
-        # to_remove = []
-        # for enemy in self.listEnemies:
-        #     if enemy.rect.colliderect(self.player.rect):
-        #         to_remove.append(enemy)
-
-        # self.listEnemies = [
-        #     enemy for enemy in self.listEnemies if enemy not in to_remove]
-
-        # # Score Control
-        # self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
-        # self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
         
-        for enemy in self.listEnemies:
+        
+        # Enemies
+        enemy_to_remove = []
+        for enemy in self.listEnemies[:]:  
+            # Delete enemy
+            for arrow in self.listArrows[:]:  
+                if arrow.rect.colliderect(enemy.rect):
+                    enemy_to_remove.append(enemy)
+                    self.listArrows.remove(arrow)
+                    
+            # Game Over
             if enemy.rect.colliderect(self.player.rect):
-                self.inGame = True
-
-    def killEnemy(self):
-        to_remove = []
-        for enemy in self.listEnemies:
-            if enemy.rect.colliderect(self.spyhole.rect):
-                to_remove.append(enemy)
+                self.player.alive = False
 
         self.listEnemies = [
-            enemy for enemy in self.listEnemies if enemy not in to_remove]
+            enemy for enemy in self.listEnemies if enemy not in enemy_to_remove]
 
         # Score Control
         self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
         self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
+    
+    def arrowsControl(self):
+        for arrow in self.listArrows:
+            if arrow.rect.left < -41:
+                self.listArrows.remove(arrow)
+            elif arrow.rect.right > self.size[0]+41:
+                self.listArrows.remove(arrow)
+            if arrow.rect.top < -11:
+                self.listArrows.remove(arrow)
+            elif arrow.rect.bottom > self.size[1]+11:
+                self.listArrows.remove(arrow)
 
     def followPlayer(self):
         for enemy in self.listEnemies:
@@ -133,11 +142,14 @@ class Juego:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.inGame = True
-                    
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        print("click izquierdo en: ", pygame.mouse.get_pos())
-                        self.killEnemy()
+                        self.listArrows.append(
+                            Arrow(target_pos=pygame.mouse.get_pos(), init_pos=self.player.rect.center))
+                        
+            if not self.player.alive:
+                self.inGame = True
 
             # Movimiento del Jugador
             keys = pygame.key.get_pressed()
@@ -175,11 +187,11 @@ class Juego:
             # Draw Entities
             self.generateEntities()
 
-            # self.player.rect.x += self.player.speed
             # # Logica del juego.
             self.colliders()
             self.followPlayer()
             self.upMaxEnemies()
+            self.arrowsControl()
 
             # Texto del juego.
             labelTime = self.mainFont.render(self.timeConv, 1, self.white)
@@ -193,11 +205,6 @@ class Juego:
 
             # Fps
             self.clock.tick(self.fps)
-
-        self.gameOver()
-
-    def gameOver(self):
-        print("Game Over")
 
     pygame.quit()
 
