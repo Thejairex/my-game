@@ -1,7 +1,6 @@
 import pygame
-import pyganim
 
-from Assets.entity import Entity
+from Assets.Entities.entity import Entity
 
 
 class Personaje(Entity):

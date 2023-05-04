@@ -3,7 +3,7 @@ import pygame
 import random
 
 # Importacion de modulos
-from Assets.Monsters.enemy import Enemigo
+from Assets.Entities.Monsters.enemy import Enemigo
 
 
 class Slime(Enemigo):

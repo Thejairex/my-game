@@ -1,11 +1,10 @@
 # importacion de librerias
 import pygame
-# import random
-# import pyganim
+
 
 # Importacion de modulos
-from Assets.player import Personaje
-from Assets.Monsters.slime import Slime
+from Assets.Entities.player import Personaje
+from Assets.Entities.Monsters.slime import Slime
 from Assets.spyhole import Spyhole
 
 class Juego:
@@ -68,9 +67,26 @@ class Juego:
     def colliders(self):
 
         # Elimited Enemies
-        to_remove = []
+        # to_remove = []
+        # for enemy in self.listEnemies:
+        #     if enemy.rect.colliderect(self.player.rect):
+        #         to_remove.append(enemy)
+
+        # self.listEnemies = [
+        #     enemy for enemy in self.listEnemies if enemy not in to_remove]
+
+        # # Score Control
+        # self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
+        # self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
+        
         for enemy in self.listEnemies:
             if enemy.rect.colliderect(self.player.rect):
+                self.inGame = True
+
+    def killEnemy(self):
+        to_remove = []
+        for enemy in self.listEnemies:
+            if enemy.rect.colliderect(self.spyhole.rect):
                 to_remove.append(enemy)
 
         self.listEnemies = [
@@ -117,6 +133,11 @@ class Juego:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.inGame = True
+                    
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        print("click izquierdo en: ", pygame.mouse.get_pos())
+                        self.killEnemy()
 
             # Movimiento del Jugador
             keys = pygame.key.get_pressed()
@@ -161,9 +182,9 @@ class Juego:
             self.upMaxEnemies()
 
             # Texto del juego.
-            labelTime = self.mainFont.render(self.timeConv, 0, self.white)
+            labelTime = self.mainFont.render(self.timeConv, 1, self.white)
             labelEnemyKilled = self.mainFont.render(
-                f"Enemigos eliminados: {self.totalEnemiesKilled}", 0, self.white)
+                f"Enemigos eliminados: {self.totalEnemiesKilled}", 1, self.white)
 
             self.screen.blit(labelTime,
                              (self.size[0]//2 - labelTime.get_width()//2, 0))
@@ -172,6 +193,11 @@ class Juego:
 
             # Fps
             self.clock.tick(self.fps)
+
+        self.gameOver()
+
+    def gameOver(self):
+        print("Game Over")
 
     pygame.quit()
 
