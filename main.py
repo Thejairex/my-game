@@ -72,17 +72,16 @@ class Juego:
 
     # Metodos logicos del juego
     def colliders(self):
-        
-        
+
         # Enemies
         enemy_to_remove = []
-        for enemy in self.listEnemies[:]:  
+        for enemy in self.listEnemies[:]:
             # Delete enemy
-            for arrow in self.listArrows[:]:  
+            for arrow in self.listArrows[:]:
                 if arrow.rect.colliderect(enemy.rect):
                     enemy_to_remove.append(enemy)
                     self.listArrows.remove(arrow)
-                    
+
             # Game Over
             if enemy.rect.colliderect(self.player.rect):
                 self.player.alive = False
@@ -93,7 +92,7 @@ class Juego:
         # Score Control
         self.totalEnemiesKilled += self.maxEnemies - len(self.listEnemies)
         self.enemiesKilled += self.maxEnemies - len(self.listEnemies)
-    
+
     def arrowsControl(self):
         for arrow in self.listArrows:
             if arrow.rect.left < -41:
@@ -147,7 +146,7 @@ class Juego:
                     if event.button == 1:
                         self.listArrows.append(
                             Arrow(target_pos=pygame.mouse.get_pos(), init_pos=self.player.rect.center))
-                        
+
             if not self.player.alive:
                 self.inGame = True
 

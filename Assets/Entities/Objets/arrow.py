@@ -29,7 +29,7 @@ class Arrow(Entity):
 
     def draw(self, screen) -> pygame.Surface.blit:
         return screen.blit(self.sprite, self.rect)
-    
+
     def moveToObjetive(self):
         dist = math.sqrt(self.delta_X**2 + self.delta_Y**2)
         if dist > 0:
@@ -37,7 +37,7 @@ class Arrow(Entity):
             dy_norm = self.delta_Y / dist
             dx_move = dx_norm * self.speed
             dy_move = dy_norm * self.speed
-            
+
             if dist > self.speed:
                 self.rect.move_ip(dx_move, dy_move)
             else:
